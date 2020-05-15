@@ -103,7 +103,8 @@ def mean_vector(sentence_score,no_of_sentences, dict_freq):
     for word in dict_freq:
         su = 0
         for i in range(no_of_sentences):
-            su += sentences_with_score[i][word]
+            # su += sentences_with_score[i][word]
+            su += sentence_score[i][word]
         mean[word] = su/no_of_sentences
     return mean
 
@@ -112,7 +113,8 @@ def print_pos(pos, sentences):
     for i in range(len(pos)):
         if(pos[i] == 1):
             summary += sentences[i]
-    print(summary)
+    # print(summary)
+    return summary
 
 def simulate(obj_function, sentences, colony_size=30, n_iter=5000, max_trials=100, simulations=30):
     # for _ in range(simulations):
@@ -120,12 +122,12 @@ def simulate(obj_function, sentences, colony_size=30, n_iter=5000, max_trials=10
         # optimizer.optimize()
     optimizer = ABC(obj_function, colony_size=colony_size, n_iter=n_iter, max_trials=max_trials)
     optimizer.optimize()
-    print_pos(optimizer.optimal_solution.pos, sentences)
+    return print_pos(optimizer.optimal_solution.pos, sentences)
 
 file = 'input.txt'
 file = open(file , 'r')
 text = file.read()
-tokenized_sentence = sent_tokenize(text)
+tokenized_sentence = sent_tokenize(text) # list of sentences
 text = remove_special_characters(str(text))
 text = re.sub(r'\d+', '', text)
 tokenized_words_with_stopwords = word_tokenize(text)
@@ -133,7 +135,7 @@ tokenized_words = [word for word in tokenized_words_with_stopwords if word not i
 tokenized_words = [word for word in tokenized_words if len(word) > 1]
 tokenized_words = [word.lower() for word in tokenized_words]
 tokenized_words = lemmatize_words(tokenized_words)
-word_freq = freq(tokenized_words)
+word_freq = freq(tokenized_words) # dict_freq of all words
 input_user = int(input('Percentage of information to retain(in percent):'))
 no_of_sentences = int((input_user * len(tokenized_sentence))/100)
 sentences_with_score = dict()
@@ -143,4 +145,6 @@ o = mean_vector(sentences_with_score, len(tokenized_sentence), word_freq)
 obj_function = content_coverage(len(tokenized_sentence), no_of_sentences, o, sentence_map=sentences_with_score)
 # for x in sentences_with_score.keys():
 #     print(x, sentences_with_score[x])
-simulate(obj_function, tokenized_sentence)
+summary = simulate(obj_function, tokenized_sentence)
+outF = open('summary.txt',"w")
+outF.write(summary)

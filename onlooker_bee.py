@@ -4,7 +4,6 @@ import numpy as np
 class OnLookerBee(ArtificialBee):
 
     def onlook(self, best_food_sources, max_trials):
-        # best_food_sources should be a 
         candidate = np.random.choice(best_food_sources)
         self.__exploit(candidate.pos, candidate.fitness, max_trials)
     

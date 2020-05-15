@@ -7,7 +7,7 @@ from six import add_metaclass
 
 def cosine_similarity(x, y):
     '''
-    Returns a value between [0,1] that represents the similarity between two sentences.
+    Returns a value that represents the similarity between two sentences.
     The arguments are two vectors that represent tf.isf or tf.idf scores of two sentences.
     edit: the arguments are two maps that contaiin ts.idf scores of two sentences.
     '''
@@ -43,7 +43,6 @@ class ObjectiveFunction(object):
         indices = np.random.choice(np.arange(self.dim), replace=False, size=self.s)
         on[indices] = 1
         return on,indices
-
 
     @abstractmethod
     def evaluate(self, x):
